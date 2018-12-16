@@ -1,5 +1,6 @@
 import numpy as np
 import csv
+
 class DataReader:
 
     def __init__(self,file_path):
@@ -8,7 +9,7 @@ class DataReader:
     def get_labelled_data(self):
         data = []
         labels = []
-        with open(self.file_path) as tsvfile:
+        with open(self.file_path,encoding='utf8') as tsvfile:
             reader = csv.reader(tsvfile, delimiter='\t')
             for i,line in enumerate(reader):
                 if i!=0:
