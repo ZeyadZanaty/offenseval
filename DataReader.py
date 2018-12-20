@@ -24,10 +24,10 @@ class DataReader:
             if all_labels[1] == 'UNT':
                 label = 1
             elif all_labels[1] == 'TIN':
-                if all_labels[2] =='IND':
+                if all_labels[2] == 'IND':
                     label = 2
-                elif all_labels[2]=='GRP':
-                    label=3
+                elif all_labels[2] == 'GRP':
+                    label = 3
         return label
 
 #0 - Not offensive
