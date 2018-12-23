@@ -1,10 +1,14 @@
 import numpy as np
 import copy
 from tqdm import tqdm
+import imp
+import warnings 
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 class Preprocess:
 
-    def __init__(self,data):
+    def __init__(self,data,labels):
         self.data = copy.deepcopy(data)
+        self.labels = labels
 
     def tokenize(self):
         from nltk import word_tokenize
@@ -16,30 +20,60 @@ class Preprocess:
         from nltk.corpus import stopwords
         import re
         stop = set(stopwords.words("english"))
-        noise = ['@','USER','#']
+        noise = ['@','USER','#','URL']
         for i,tweet in tqdm(enumerate(self.data),'Stopwords Removal'):
             self.data[i] = [w for w in tweet if w not in stop and not re.match(r"[^a-zA-Z\d\s]+", w) and w not in noise]
         return self.data
     
     def get_pos(self, word):
-        from collections import Counter
-        from nltk.corpus import wordnet  # To get words in dictionary with their parts of speech
-        w_synsets = wordnet.synsets(word)
-        pos_counts = Counter()
-        pos_counts["n"] = len([item for item in w_synsets if item.pos() == "n"])
-        pos_counts["v"] = len([item for item in w_synsets if item.pos() == "v"])
-        pos_counts["a"] = len([item for item in w_synsets if item.pos() == "a"])
-        pos_counts["r"] = len([item for item in w_synsets if item.pos() == "r"])
-        most_common_pos_list = pos_counts.most_common(3)
-        return most_common_pos_list[0][0]  # first indexer for getting the top POS from list, second indexer for getting POS from tuple( POS: count )
+        from nltk import pos_tag
+        from nltk.corpus import wordnet
+        tag = pos_tag([word])[0][1]
+        if tag.startswith('J'):
+            return wordnet.ADJ
+        elif tag.startswith('V'):
+            return wordnet.VERB
+        elif tag.startswith('N'):
+            return wordnet.NOUN
+        elif tag.startswith('R'):
+            return wordnet.ADV
+        else:
+            return wordnet.NOUN
 
     def lemmatize(self):
-        from nltk.stem import WordNetLemmatizer  # lemmatizes word based on it's parts of speech
+        from nltk.stem import WordNetLemmatizer
         wnl = WordNetLemmatizer()
         for i, tweet in tqdm(enumerate(self.data),'Lemmatization'):
             for j, word in enumerate(tweet):
                 self.data[i][j] = wnl.lemmatize(word, pos=self.get_pos(word))
         return self.data
+    
+    def stem(self):
+        from nltk.stem import PorterStemmer
+        stemmer = PorterStemmer()
+        for i,tweet in tqdm(enumerate(self.data),'Stemming'):
+            for j,word in enumerate(tweet):
+                self.data[i][j] = stemmer.stem(word)
+        return self.data
+    
+    def word_cloud(self,filter=None):
+        import matplotlib.pyplot as plt
+        filters = ['NOT','UNT','TIN','GRP','OFF']
+        if not filter:
+            plot_data = [w for i,tweet in enumerate(self.data) for w in tweet]
+        else:
+            filter = filters.index(filter)
+            if filter == 4:
+                plot_data = [w for i,tweet in enumerate(self.data) for w in tweet if self.labels[i] in [1,2,3]]
+            else:
+                plot_data = [w for i,tweet in enumerate(self.data) for w in tweet if self.labels[i]==filter]
+        all_words = ' '.join(plot_data)
+        from wordcloud import WordCloud
+        wordcloud = WordCloud(width=800, height=500, random_state=21, max_font_size=110).generate(all_words)
+        plt.figure(figsize=(10, 7))
+        plt.imshow(wordcloud, interpolation="bilinear")
+        plt.axis('off')
+        plt.show()
 
     def clean(self, params):
         params = ['tokenize']+list(params)
@@ -48,5 +82,5 @@ class Preprocess:
             if clean_call:
                 clean_call()
             else:
-                raise Exception(str(p)+' is not an available function')
+                raise Exception(str(param)+' is not an available function')
         return self.data
