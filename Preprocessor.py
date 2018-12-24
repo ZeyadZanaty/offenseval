@@ -4,11 +4,10 @@ from tqdm import tqdm
 import imp
 import warnings 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
-class Preprocess:
+class Preprocessor:
 
-    def __init__(self,data,labels):
-        self.data = copy.deepcopy(data)
-        self.labels = labels
+    def __init__(self,*args):
+        self.params = list(args)
 
     def tokenize(self):
         from nltk import word_tokenize
@@ -56,29 +55,33 @@ class Preprocess:
                 self.data[i][j] = stemmer.stem(word)
         return self.data
     
-    def word_cloud(self,filter=None):
+    def word_cloud(self,labels,filter=None):
+
+        if not isinstance(self.data[0],list):
+            raise Exception('Data must be tokenized before using word cloud')
         import matplotlib.pyplot as plt
+        from wordcloud import WordCloud
         filters = ['NOT','UNT','TIN','GRP','OFF']
         if not filter:
             plot_data = [w for i,tweet in enumerate(self.data) for w in tweet]
         else:
             filter = filters.index(filter)
             if filter == 4:
-                plot_data = [w for i,tweet in enumerate(self.data) for w in tweet if self.labels[i] in [1,2,3]]
+                plot_data = [w for i,tweet in enumerate(self.data) for w in tweet if labels[i] in [1,2,3]]
             else:
-                plot_data = [w for i,tweet in enumerate(self.data) for w in tweet if self.labels[i]==filter]
+                plot_data = [w for i,tweet in enumerate(self.data) for w in tweet if labels[i]==filter]
         all_words = ' '.join(plot_data)
-        from wordcloud import WordCloud
         wordcloud = WordCloud(width=800, height=500, random_state=21, max_font_size=110).generate(all_words)
         plt.figure(figsize=(10, 7))
         plt.imshow(wordcloud, interpolation="bilinear")
         plt.axis('off')
         plt.show()
 
-    def clean(self, params):
-        params = ['tokenize']+list(params)
-        for param in tqdm(params,'Preprocessing'):
-            clean_call = getattr(self, param)
+    def clean(self, data):
+        self.data = copy.deepcopy(data)
+        self.params = ['tokenize']+self.params
+        for param in tqdm(self.params,'Preprocessing'):
+            clean_call = getattr(self, param,None)
             if clean_call:
                 clean_call()
             else:
