@@ -1,6 +1,7 @@
 import warnings 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore",category=FutureWarning)
+import imp 
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
@@ -9,7 +10,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import GridSearchCV
 from itertools import product
-import imp 
+
 class Classifier:
     
     def __init__(self,type,params={}):
@@ -45,9 +46,14 @@ class Classifier:
         tuner.fit(tr_data,tr_labels)
         self.model = tuner.best_estimator_
         if best_only:
-            return tuner,{'score':tuner.best_score_,'parmas':tuner.best_params_}
+            return {'score':tuner.best_score_,'parmas':tuner.best_params_}
         else:
-            return tuner,tuner.cv_results_
+            param_scores = {}
+            results = tuner.cv_results_
+            for i,param in enumerate(tuner.cv_results_['params']):
+                param_str  = ', '.join("{!s}={!r}".format(key,val) for (key,val) in param.items())
+                param_scores[param_str]={'test_score':results['mean_test_score'][i],'train_score':results['mean_train_score'][i]}
+            return param_scores
     
     def get_model(self):
         if getattr(self,'model',None):

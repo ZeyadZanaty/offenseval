@@ -9,15 +9,16 @@ from tqdm import tqdm
 
 class Vectorizer:
     
-    def __init__(self,type,train=True,params={}):
+    def __init__(self,type,pre_trained=False,retrain=False,params={}):
         self.type = type
-        self.train = True
+        self.pre_trained = pre_trained
         self.params = params
+        self.retrain = retrain
 
     def word2vec(self):
         from os import listdir
-        if self.train:
-            if 'word2vec.model' not in listdir('.'):
+        if not self.pre_trained:
+            if 'word2vec.model' not in listdir('.') or self.retrain:
                 model = self.train_w2v()
             else:
                 model = Word2Vec.load("word2vec.model")

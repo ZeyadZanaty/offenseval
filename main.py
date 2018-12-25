@@ -5,15 +5,16 @@ from Classifier import Classifier
 
 dr = DataReader('./datasets/training-v1/offenseval-training-v1.tsv')
 data,labels = dr.get_labelled_data()
-data = data[:]
-labels = labels[:]
+data = data[:200]
+labels = labels[:200]
 prp = Preprocessor('remove_stopwords','lemmatize')
 data = prp.clean(data)
 # prp.word_cloud(labels,'OFF')
-vct = Vectorizer('word2vec',train=True)
+vct = Vectorizer('word2vec')
 vectors = vct.vectorize(data)
 tr_vectors,tr_labels = vectors[:len(vectors)//2], labels[:len(vectors)//2]
 tst_vectors,tst_labels = vectors[len(vectors)//2:], labels[len(vectors)//2:]
 clf = Classifier('KNN')
-tuned_clf = clf.tune(tr_vectors,tr_labels,{'n_neighbors':[5]},best_only=True)
+tuned_clf = clf.tune(tr_vectors,tr_labels,{'n_neighbors':[5]},best_only=False)
+print(tuned_clf)
 print(clf.score(tst_vectors,tst_labels))

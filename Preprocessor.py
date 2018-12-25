@@ -7,7 +7,13 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 class Preprocessor:
 
     def __init__(self,*args):
-        self.params = list(args)
+        self.params =[]
+        if args:
+            if isinstance(args[0],tuple):
+                self.params = list(*args)
+            else:
+                self.params = list(args)
+            
 
     def tokenize(self):
         from nltk import word_tokenize
