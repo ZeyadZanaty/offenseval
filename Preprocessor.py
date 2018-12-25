@@ -55,19 +55,20 @@ class Preprocessor:
                 self.data[i][j] = stemmer.stem(word)
         return self.data
     
-    def word_cloud(self,labels,filter=None):
-
+    def word_cloud(self,labels=None,filter=None):
         if not isinstance(self.data[0],list):
-            raise Exception('Data must be tokenized before using word cloud')
+            raise Exception('Data must be tokenized before using word cloud.')
         import matplotlib.pyplot as plt
         from wordcloud import WordCloud
-        filters = ['NOT','UNT','TIN','GRP','OFF']
+        filters = ['NOT','UNT','TIN','GRP','OTH','OFF']
         if not filter:
             plot_data = [w for i,tweet in enumerate(self.data) for w in tweet]
         else:
+            if not labels:
+                raise Exception('Labels must be provided for filtering text.')
             filter = filters.index(filter)
             if filter == 4:
-                plot_data = [w for i,tweet in enumerate(self.data) for w in tweet if labels[i] in [1,2,3]]
+                plot_data = [w for i,tweet in enumerate(self.data) for w in tweet if labels[i] >0]
             else:
                 plot_data = [w for i,tweet in enumerate(self.data) for w in tweet if labels[i]==filter]
         all_words = ' '.join(plot_data)

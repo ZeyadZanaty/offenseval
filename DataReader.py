@@ -28,9 +28,12 @@ class DataReader:
                     label = 2
                 elif all_labels[2] == 'GRP':
                     label = 3
+                elif all_labels[2] =='OTH':
+                    label = 4
         return label
 
 #0 - Not offensive
 #1 - Offensive untargeted
 #2 - Offensive targeted indiviualds
 #3 - Offensive targeted groups 
+#4 - Offensive targeted others
