@@ -19,11 +19,11 @@ def clean_string(str):
   return newstr
 
 def get_plot_arrs(params,acc_num, items):
-  plt_arr = [acc[0] for acc in items]
-  plt_arr = [plt_arr[i] for i in range (0,acc_num)]
-  ticks_arr = [clean_string(acc[1].__str__())+clean_string(acc[2].__str__())+'\n Parameters: '+
-               clean_string(params.__str__())for acc in v]
-  ticks_arr = [ticks_arr[i] for i in range (0,acc_num)]
+  plt_arr = [acc[0]['test_score'] for acc in items]
+  plt_arr = plt_arr[:acc_num]
+  ticks_arr = [clean_string(str(acc[1]))+clean_string(str(acc[2]))+'\n Parameters: '+
+               clean_string(str(params))for acc in v]
+  ticks_arr = ticks_arr[:acc_num]
   return plt_arr,ticks_arr
 
 def plot_clfs(width=0.15,max_num=3,acc_sep=1.2,param_sep=2.8):
@@ -44,7 +44,7 @@ def plot_clfs(width=0.15,max_num=3,acc_sep=1.2,param_sep=2.8):
     param_sep += len(value)/10
     for k, v in value.items():
       plt.title(key.__str__())
-      plt_arr, plt_arr_ticks = get_plot_arrs(k,max_num, v)
+      plt_arr, plt_arr_ticks = get_plot_arrs(k,min(max_num,len(list(value.items()))), v)
       print(plt_arr, plt_arr_ticks)
       if not plt_acc:
         plt_acc = plt_arr
@@ -68,6 +68,7 @@ def plot_clfs(width=0.15,max_num=3,acc_sep=1.2,param_sep=2.8):
   plt.show()
 
 cleaning_operations = ['remove_stopwords','lemmatize','stem']
+
 prp_list = [
     i for j in range(len(cleaning_operations)) for i in itertools.combinations(cleaning_operations,j+1)]
 
