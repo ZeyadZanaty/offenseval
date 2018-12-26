@@ -43,7 +43,7 @@ def plot_clfs(width=0.15,max_num=3,acc_sep=1.2,param_sep=2.8):
     acc_sep += len(value)/20
     param_sep += len(value)/10
     for k, v in value.items():
-      plt.title(key.__str__())
+      plt.title(str(key))
       plt_arr, plt_arr_ticks = get_plot_arrs(k,min(max_num,len(list(value.items()))), v)
       print(plt_arr, plt_arr_ticks)
       if not plt_acc:
@@ -70,9 +70,10 @@ def plot_clfs(width=0.15,max_num=3,acc_sep=1.2,param_sep=2.8):
 cleaning_operations = ['remove_stopwords','lemmatize','stem']
 
 prp_list = [
-    i for j in range(len(cleaning_operations)) for i in itertools.combinations(cleaning_operations,j+1)]
+    i for j in range(len(cleaning_operations)) for i in itertools.combinations(cleaning_operations,j+1)
+    ]
 
-vec_list = [['tfidd',{}],['word2vec',{}],['glove',{}]]
+vec_list = [['tfidf',{}],['word2vec',{}],['glove',{}],['BoW',{}]]
 
 clf_list = [['RandomForestClassifier',{'n_estimators': [n for n in range(10,200,10)]}],
             ['KNN',{'n_neighbors':[n for n in range(1,8,2)]}],
@@ -98,11 +99,12 @@ for vec in vec_list:
     clean_data = preprocessor.clean(data)
 
     vectorizer = Vectorizer(type=vec[0],params=vec[1])
-    vecs = vectorizer.vectorize(clean_data)
+    vectorized_data = vectorizer.vectorize(clean_data)
+
     for cl in clf_list:
       print('Classifier: ',cl[0])
       clf = Classifier(cl[0])
-      params_accs = clf.tune(vecs,labels,cl[1], best_only=False)
+      params_accs = clf.tune(vectorized_data,labels,cl[1], best_only=False)
       print('Scores:',params_accs)
       for key, value in params_accs.items():
         if key in clf_dict[cl[0]]:
@@ -116,6 +118,4 @@ for key,value in clf_dict.items():
     clf_dict[key][k] = v
 print(clf_dict)
 
-
 plot_clfs(width=0.15,max_num=3,acc_sep=1.2,param_sep=2.8)
-

@@ -1,9 +1,9 @@
 import warnings
 warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
-warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings('ignore', category=DeprecationWarning)
 import numpy as np
 from gensim.models import Word2Vec,FastText
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer,CountVectorizer
 import gensim.downloader as api
 from tqdm import tqdm
 
@@ -45,6 +45,12 @@ class Vectorizer:
 
     def tfidf(self):
         vectorizer = TfidfVectorizer(**self.params)
+        untokenized_data =[' '.join(tweet) for tweet in self.data] 
+        self.vectors = vectorizer.fit_transform(untokenized_data).toarray()
+        return self.vectors
+    
+    def BoW(self):
+        vectorizer = CountVectorizer(**self.params)
         untokenized_data =[' '.join(tweet) for tweet in self.data] 
         self.vectors = vectorizer.fit_transform(untokenized_data).toarray()
         return self.vectors

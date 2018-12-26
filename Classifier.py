@@ -9,7 +9,6 @@ from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, Bagging
 from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import GridSearchCV
-from itertools import product
 
 class Classifier:
     
