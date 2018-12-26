@@ -71,7 +71,7 @@ cleaning_operations = ['remove_stopwords','lemmatize','stem']
 prp_list = [
     i for j in range(len(cleaning_operations)) for i in itertools.combinations(cleaning_operations,j+1)]
 
-vec_list = [['word2vec',{}],['glove',{}]]
+vec_list = [['tfidd',{}],['word2vec',{}],['glove',{}]]
 
 clf_list = [['RandomForestClassifier',{'n_estimators': [n for n in range(10,200,10)]}],
             ['KNN',{'n_neighbors':[n for n in range(1,8,2)]}],
@@ -97,7 +97,7 @@ for vec in vec_list:
     clean_data = preprocessor.clean(data)
 
     vectorizer = Vectorizer(type=vec[0],params=vec[1])
-    vecs = vectorizer.vectorize(data)
+    vecs = vectorizer.vectorize(clean_data)
     for cl in clf_list:
       print('Classifier: ',cl[0])
       clf = Classifier(cl[0])
