@@ -20,15 +20,15 @@ class Vectorizer:
     def word2vec(self):
         if not self.pre_trained:
             if 'word2vec.model' not in listdir('./embeddings') or self.retrain:
-                print('\n\tTraining Word2Vec model...')
+                print('\nTraining Word2Vec model...')
                 model = self.train_w2v()
             elif self.extend_training and 'word2vec.model' in listdir('./embeddings'):
-                print('\n\tExtending existing model...')
+                print('\nExtending existing model...')
                 model = Word2Vec.load("./embeddings/word2vec.model")
                 for i in range(5):
                     model.train(self.data, total_examples=len(self.data), epochs=50)
             else:
-                print('\n\tLoading existing model...')
+                print('\nLoading existing model...')
                 model = Word2Vec.load("./embeddings/word2vec.model")
         else:
             model = Word2Vec(self.data,**self.params)
@@ -68,12 +68,11 @@ class Vectorizer:
     def glove(self):
         from os import listdir
         if 'glove-twitter-100.gz' in listdir('./embeddings'):
-            print('Loading Glove Embeddings...\t')
+            print('\nLoading Glove Embeddings from file...')
             model = KeyedVectors.load_word2vec_format('./embeddings/glove-twitter-100.gz')
         else:
-            print('Loading Glove Embeddings...\t')
+            print('\nLoading Glove Embeddings from api...')
             model = api.load('glove-twitter-100')
-        print("Done.",len(model),'words loaded!')
         vectorizer = model.wv
         vectors = [np.array([vectorizer[word] if word in model else np.zeros(100) for word in tweet]).flatten() for tweet in tqdm(self.data,'Vectorizing')]
         self.vocab_length = len(model.wv.vocab)

@@ -5,12 +5,12 @@ from Classifier import Classifier
 
 dr = DataReader('./datasets/training-v1/offenseval-training-v1.tsv')
 data,labels = dr.get_labelled_data()
-data = data[:]
-labels = labels[:]
+data = data[:50]
+labels = labels[:50]
 prp = Preprocessor('remove_stopwords','lemmatize')
 data = prp.clean(data)
 # prp.word_cloud(labels,'OFF')
-vct = Vectorizer('word2vec')
+vct = Vectorizer('glove')
 vectors = vct.vectorize(data)
 tr_vectors,tr_labels = vectors[:len(vectors)//2], labels[:len(vectors)//2]
 tst_vectors,tst_labels = vectors[len(vectors)//2:], labels[len(vectors)//2:]

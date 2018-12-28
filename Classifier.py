@@ -1,6 +1,7 @@
 import warnings 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore",category=FutureWarning)
+warnings.filterwarnings("ignore",category=Warning)
 import imp 
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC

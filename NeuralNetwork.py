@@ -25,10 +25,8 @@ class NeuralNetwork:
     def build_model(self):
         # TODO:
         # build model
+        self.model = model
 
 
-    def train(self):
-        epochs = 100
-        batch_size = 30
-        self.model.fit(self.tr_data, self.tr_labels, batch_size=batch_size, epochs=epochs, verbose=10, callbacks=[checkpoint], validation_data=(self.val_data, self.val_labels))  # starts training
-        return self.model
+    def train(self,epochs=100,batch_size=64):
+        self.model.fit(self.tr_data, self.tr_labels, batch_size=batch_size, epochs=epochs, verbose=1, validation_data=(self.val_data, self.val_labels))  # starts training
