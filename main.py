@@ -5,8 +5,8 @@ from Classifier import Classifier
 
 dr = DataReader('./datasets/training-v1/offenseval-training-v1.tsv')
 data,labels = dr.get_labelled_data()
-data = data[:200]
-labels = labels[:200]
+data = data[:]
+labels = labels[:]
 prp = Preprocessor('remove_stopwords','lemmatize')
 data = prp.clean(data)
 # prp.word_cloud(labels,'OFF')

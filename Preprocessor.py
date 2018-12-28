@@ -18,14 +18,14 @@ class Preprocessor:
     def tokenize(self):
         from nltk import word_tokenize
         for i,tweet in tqdm(enumerate(self.data),'Tokenization'):
-            self.data[i] = word_tokenize(tweet)
+            self.data[i] = word_tokenize(tweet.lower())
         return self.data
 
     def remove_stopwords(self):
         from nltk.corpus import stopwords
         import re
         stop = set(stopwords.words("english"))
-        noise = ['@','USER','#','URL']
+        noise = ['@','user','#','url']
         for i,tweet in tqdm(enumerate(self.data),'Stopwords Removal'):
             self.data[i] = [w for w in tweet if w not in stop and not re.match(r"[^a-zA-Z\d\s]+", w) and w not in noise]
         return self.data

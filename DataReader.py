@@ -3,8 +3,9 @@ import csv
 
 class DataReader:
 
-    def __init__(self,file_path):
+    def __init__(self,file_path,sub_task=None):
         self.file_path = file_path
+        self.sub_task = sub_task
 
     def get_labelled_data(self):
         data = []
@@ -14,8 +15,23 @@ class DataReader:
             for i,line in enumerate(reader):
                 if i!=0:
                     label = self.str_to_label(line[-3:])
-                    labels.append(label)
-                    data.append(line[1])
+                    if not self.sub_task:
+                        labels.append(label)
+                        data.append(line[1])
+                    elif self.sub_task == 'A':
+                        data.append(line[1])
+                        labels.append(int(label>0))
+                    elif self.sub_task =='B':
+                        if label > 0:
+                            data.append(line[1])
+                            labels.append(int(label>1))
+                    elif self.sub_task == 'C':
+                        if label > 1:
+                            data.append(line[1])
+                            labels.append(label-2)
+                    else:
+                        labels.append(label)
+                        data.append(line[1])
         return data,labels
     
     def str_to_label(self,all_labels):

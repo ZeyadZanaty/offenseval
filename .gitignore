@@ -102,5 +102,8 @@ venv.bak/
 
 # mypy
 .mypy_cache/
-./word2vec.model
-word2vec.model
+
+embeddings/word2vec.model
+embeddings/glove-twitter-100.gz
+embeddings/glove-twitter-100.model
+embeddings/*
