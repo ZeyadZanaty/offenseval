@@ -103,7 +103,7 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-embeddings/word2vec.model
+# embeddings/word2vec.model
 embeddings/glove-twitter-100.gz
 embeddings/glove-twitter-100.model
-embeddings/*
+# embeddings/*
