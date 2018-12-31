@@ -7,6 +7,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, BaggingClassifier
+from sklearn.naive_bayes import GaussianNB
 from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import GridSearchCV
@@ -16,9 +17,10 @@ class Classifier:
     def __init__(self,type,params={}):
         __classifers__ = {
         'KNN': KNeighborsClassifier,
+        'NaiveBayes': GaussianNB,
         'SVC': SVC,
         'DecisionTree': DecisionTreeClassifier,
-        'RandomForestClassifier': RandomForestClassifier,
+        'RandomForest': RandomForestClassifier,
         'LogisticRegression': LogisticRegression,
         'MLP': MLPClassifier,
         'AdaBoost': AdaBoostClassifier,
