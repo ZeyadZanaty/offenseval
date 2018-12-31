@@ -1,0 +1,7 @@
+sklearn
+gensim
+nltk
+numpy
+tqdm
+matplotlib
+keras
