@@ -13,7 +13,7 @@ class Preprocessor:
                 self.params = list(*args)
             else:
                 self.params = list(args)
-            
+        self.params = ['tokenize']+self.params
 
     def tokenize(self):
         from nltk import word_tokenize
@@ -86,7 +86,6 @@ class Preprocessor:
 
     def clean(self, data):
         self.data = copy.deepcopy(data)
-        self.params = ['tokenize']+self.params
         for param in tqdm(self.params,'Preprocessing'):
             clean_call = getattr(self, param,None)
             if clean_call:

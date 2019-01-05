@@ -1,6 +1,8 @@
 import numpy as np
 import csv
 from tqdm import tqdm
+from sklearn.utils import shuffle
+
 class DataReader:
 
     def __init__(self,file_path,sub_task=None):
@@ -22,6 +24,29 @@ class DataReader:
                     labels.append(label)
                     data.append(line[1])
         return data,labels
+    
+    def shuffle(self,data,labels,state=None):
+        if not state:
+            if not self.sub_task or self.sub_task == 'A':
+                off_data,off_labels = [],[]
+                not_data,not_labels = [],[]
+                for i,tweet in tqdm(enumerate(data),'Shuffling Data'):
+                    if labels[i] == 0:
+                        not_data.append(tweet)
+                        not_labels.append(labels[i])
+                    else:
+                        off_data.append(tweet)
+                        off_labels.append(labels[i])
+                shuffled_data = off_data[:len(off_data)//4]+not_data[:len(not_data)//4]+off_data[len(off_data)//4:len(off_data)//2]+not_data[len(not_data)//4:len(not_data)//2]+off_data[len(off_data)//2:3*len(off_data)//4]+not_data[len(not_data)//2:3*len(not_data)//4]+off_data[3*len(off_data)//4:]+not_data[3*len(not_data)//4:]
+                shuffled_labels = off_labels[:len(off_labels)//4]+not_labels[:len(not_labels)//4]+off_labels[len(off_labels)//4:len(off_labels)//2]+not_labels[len(not_labels)//4:len(not_labels)//2]+off_labels[len(off_labels)//2:3*len(off_labels)//4]+not_labels[len(not_labels)//2:3*len(not_labels)//4]+off_labels[3*len(off_labels)//4:]+not_labels[3*len(not_labels)//4:]
+                return shuffled_data,shuffled_labels
+            elif self.sub_task in ['B','C']:
+                pass
+        elif state == 'random':
+            shuffled_data, shuffled_labels = shuffle(data, labels, random_state=7)
+            return shuffled_data,shuffled_labels
+        else:
+            return data,labels
     
     def str_to_label(self,all_labels):
         label = 0

@@ -78,7 +78,8 @@ vec_list = [['fasttext',{}],['tfidf',{}],['word2vec',{}],['glove',{}],['BoW',{}]
 clf_list = [['RandomForest',{'n_estimators': [n for n in range(10,200,10)]}],
             ['KNN',{'n_neighbors':[n for n in range(1,8,2)]}],
             ['SVC',{'C':[0.1,10,100],'kernel':['rbf','poly']}],
-            ['NaiveBayes',{'var_smoothing':[1e-15,1e-09,1e-05]}],
+            ['M-NaiveBayes',{'alpha':[0,1,10],'fit_prior':[True,False]}],
+            ['G-NaiveBayes',{'var_smoothing':[1e-15,1e-09,1e-05]}],
             ['LogisticRegression',{'penalty':['l2'],'solver' : ['newton-cg', 'lbfgs', 'sag']}],
             ['DecisionTree',{'criterion':['gini','entropy']}],
             ['MLP',{'activation':['tanh', 'relu'],'solver':['sgd','adam','lbfgs']}]]
@@ -101,6 +102,8 @@ for vec in vec_list:
     vectorized_data = vectorizer.vectorize(clean_data)
 
     for cl in clf_list:
+      if vec[0] not in ['BoW','tfidf'] and cl[0]=='M-NaiveBayes':
+        continue
       print('Classifier: ',cl[0])
       clf = Classifier(cl[0])
       params_accs = clf.tune(vectorized_data,labels,cl[1], best_only=False)
