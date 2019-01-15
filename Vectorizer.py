@@ -89,7 +89,7 @@ class Vectorizer:
         if not self.vectorizer:
             self.vectorizer = vectorizer.fit(untokenized_data)
         self.vectors = self.vectorizer.transform(untokenized_data).toarray()
-        self.vocab_length = len(vectorizer.vocabulary_.keys())
+        self.vocab_length = len(self.vectorizer.vocabulary_.keys())
         return self.vectors
 
     def glove(self):
