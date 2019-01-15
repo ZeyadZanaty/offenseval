@@ -22,7 +22,7 @@ def get_plot_arrs(params,acc_num, items):
   plt_arr = [acc[0]['test_score'] for acc in items]
   plt_arr = plt_arr[:acc_num]
   ticks_arr = [clean_string(str(acc[1]))+clean_string(str(acc[2]))+'\n Parameters: '+
-               clean_string(str(params))for acc in v]
+               clean_string(str(params))for acc in items]
   ticks_arr = ticks_arr[:acc_num]
   return plt_arr,ticks_arr
 
