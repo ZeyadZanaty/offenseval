@@ -17,6 +17,7 @@ class Vectorizer:
         self.retrain = retrain
         self.extend_training = extend_training
         self.vectorizer = None
+        self.max_len = None
 
     def word2vec(self):
         if not self.pre_trained:
@@ -38,9 +39,10 @@ class Vectorizer:
         vectors = [
             np.array([vectorizer[word] for word in tweet  if word in model]).flatten() for tweet in tqdm(self.data,'Vectorizing')
             ]
-        max_len = np.max([len(vector) for vector in vectors])
+        if not self.max_len:
+            self.max_len = np.max([len(vector) for vector in vectors])
         self.vectors = [
-            np.array(vector.tolist()+[0 for _ in range(max_len-len(vector))]) for vector in tqdm(vectors,'Finalizing')
+            np.array(vector.tolist()+[0 for _ in range(self.max_len-len(vector))]) for vector in tqdm(vectors,'Finalizing')
             ]
         return self.vectors
 
@@ -72,12 +74,13 @@ class Vectorizer:
         vectors = [
             np.array([counts[mapper[word]] for word in tweet  if word in mapper.keys()]).flatten() for tweet in tqdm(self.data,'Vectorizing')
             ]
-        max_len = np.max([len(vector) for vector in vectors])
+        if not self.max_len:
+            self.max_len = np.max([len(vector) for vector in vectors])
         self.vectors = [
-            np.array(vector.tolist()+[0 for _ in range(max_len-len(vector))]) for vector in tqdm(vectors,'Finalizing')
+            np.array(vector.tolist()+[0 for _ in range(self.max_len-len(vector))]) for vector in tqdm(vectors,'Finalizing')
             ]
         self.vocab_length = len(mapper.keys())
-        print(len(list(mapper.keys())),counts.shape)
+        self.words_freq = sorted([[word,counts[mapper[word]]] for word in list(mapper.keys())],key= lambda x:x[1],reverse=True)
         return self.vectors
     
     def count(self):
@@ -86,6 +89,7 @@ class Vectorizer:
         if not self.vectorizer:
             self.vectorizer = vectorizer.fit(untokenized_data)
         self.vectors = self.vectorizer.transform(untokenized_data).toarray()
+        self.vocab_length = len(vectorizer.vocabulary_.keys())
         return self.vectors
 
     def glove(self):
@@ -99,9 +103,10 @@ class Vectorizer:
         vectorizer = model.wv
         vectors = [np.array([vectorizer[word] for word in tweet if word in model]).flatten() for tweet in tqdm(self.data,'Vectorizing')]
         self.vocab_length = len(model.wv.vocab)
-        max_len = np.max([len(vector) for vector in vectors])
+        if not self.max_len:
+            self.max_len = np.max([len(vector) for vector in vectors])
         self.vectors = [
-            np.array(vector.tolist()+[0 for _ in range(max_len-len(vector))]) for vector in tqdm(vectors,'Finalizing')
+            np.array(vector.tolist()+[0 for _ in range(self.max_len-len(vector))]) for vector in tqdm(vectors,'Finalizing')
             ]
         return self.vectors
 
@@ -125,9 +130,10 @@ class Vectorizer:
         vectors = [
             np.array([vectorizer[word] for word in tweet if word in model]).flatten() for tweet in tqdm(self.data,'Vectorizing')
             ]
-        max_len = np.max([len(vector) for vector in vectors])
+        if not self.max_len:
+            self.max_len = np.max([len(vector) for vector in vectors])
         self.vectors = [
-            np.array(vector.tolist()+[0 for _ in range(max_len-len(vector))]) for vector in tqdm(vectors,'Finalizing')
+            np.array(vector.tolist()+[0 for _ in range(self.max_len-len(vector))]) for vector in tqdm(vectors,'Finalizing')
             ]
         return self.vectors
 

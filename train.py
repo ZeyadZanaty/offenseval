@@ -13,14 +13,14 @@ data,labels = dr.shuffle(data,labels,'random')
 data = data[:]
 labels = labels[:]
 
-prp = Preprocessor('remove_stopwords','stem')
+prp = Preprocessor('remove_stopwords','lemmatize')
 data = prp.clean(data)
 
-vct = Vectorizer('tfidf')
-vectors = vct.vectorize(data)
-tr_vectors,tst_vectors,tr_labels,tst_labels = split(vectors,labels,test_size=0.2)
+vct = Vectorizer('count')
+vct.vectorize(data)
 
-clf = Classifier('RandomForest',{'n_estimators':60})
-tuned_clf = clf.tune(tr_vectors,tr_labels,{'n_estimators': [n for n in range(10,100,10)]},best_only=False)
-print(tuned_clf)
-print(clf.test_and_plot(tst_vectors,tst_labels,3))
+tr_data,tst_data,tr_labels,tst_labels = split(np.array(data),labels,test_size=0.2)
+
+model=DeepLearner(tr_data,tr_labels,vocab_length=vct.vocab_length,model_type='LSTM')
+model.train()
+print(model.test(tst_data,tst_labels))

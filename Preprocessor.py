@@ -25,7 +25,7 @@ class Preprocessor:
         from nltk.corpus import stopwords
         import re
         stop = set(stopwords.words("english"))
-        noise = ['@','user','#','url']
+        noise = ['user']
         for i,tweet in tqdm(enumerate(self.data),'Stopwords Removal'):
             self.data[i] = [w for w in tweet if w not in stop and not re.match(r"[^a-zA-Z\d\s]+", w) and w not in noise]
         return self.data
