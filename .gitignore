@@ -106,4 +106,3 @@ venv.bak/
 
 embeddings/
 embeddings/word2vec.model
-tune-results*

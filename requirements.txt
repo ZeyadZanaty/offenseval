@@ -6,3 +6,5 @@ tqdm
 matplotlib
 keras
 wordcloud
+pydot
+graphviz

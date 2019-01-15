@@ -23,6 +23,7 @@ class DeepLearner:
         self.max_len = max(len(max(self.tr_data,key=lambda x:len(x))),len(max(self.val_data,key=lambda x:len(x))))
         self.tr_data = self.encode_corpus(self.tr_data)
         self.val_data = self.encode_corpus(self.val_data)
+        self.model_type = model_type
         model_call = getattr(self,model_type,None)
         if model_call:
             model_call()
@@ -59,6 +60,10 @@ class DeepLearner:
         model.compile(loss='categorical_crossentropy', optimizer=adam_1,metrics=['accuracy'])
         model.summary()
         self.model = model
+    
+    def visualize(self):
+        from keras.utils import plot_model
+        plot_model(self.model,show_layer_names=False,show_shapes=True, to_file='./docs/'+str(self.model_type)+'.png')
     
     def encode_corpus(self,data):
         encoded_docs = [one_hot(' '.join(d), self.vocab_length) for d in data]
