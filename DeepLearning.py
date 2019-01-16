@@ -76,4 +76,30 @@ class DeepLearner:
         tst_data = self.encode_corpus(tst_data)
         tst_labels = self.one_hot(tst_labels)
         return self.model.metrics_names,self.model.evaluate(tst_data, tst_labels, batch_size=64, verbose=1)
+          
+    def test_and_plot(self,tst_data,tst_labels,class_num=2):
+        tst_data = self.encode_corpus(tst_data)
+        tst_labels = self.one_hot(tst_labels)
+        predicted_tst_labels = self.model.predict(tst_data,batch_size=64)
+        conf = np.zeros([class_num,class_num])
+        confnorm = np.zeros([class_num,class_num])
+        for i in range(0,tst_data.shape[0]):
+            j = np.argmax(tst_labels[i,:])
+            k = np.argmax(predicted_tst_labels[i])
+            conf[j,k] = conf[j,k] + 1
+        for i in range(0,class_num):
+            confnorm[i,:] = conf[i,:] / np.sum(conf[i,:])
+        self._confusion_matrix(confnorm, labels=[i for i in range(class_num)])
+        return self.model.metrics_names,self.model.evaluate(tst_data, tst_labels, batch_size=64, verbose=1)
 
+    def _confusion_matrix(self,cm, title='Confusion matrix', cmap=plt.cm.Blues, labels=[]):
+        plt.imshow(cm, interpolation='nearest', cmap=cmap)
+        plt.title(title)
+        plt.colorbar()
+        tick_marks = np.arange(len(labels))
+        plt.xticks(tick_marks, labels, rotation=45)
+        plt.yticks(tick_marks, labels)
+        plt.tight_layout()
+        plt.ylabel('True label')
+        plt.xlabel('Predicted label')
+        plt.show()     
