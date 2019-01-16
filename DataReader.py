@@ -25,6 +25,18 @@ class DataReader:
                     data.append(line[1])
         return data,labels
     
+    def get_test_data(self):
+        data = []
+        ids = []
+        with open(self.file_path,encoding='utf8') as tsvfile:
+            reader = csv.reader(tsvfile, delimiter='\t')
+            for i,line in enumerate(tqdm(reader,'Reading Test Data')):
+                if i is 0:
+                    continue
+                ids.append(line[0])
+                data.append(line[1])
+        return data,ids
+
     def shuffle(self,data,labels,state=None):
         if not state:
             if not self.sub_task or self.sub_task == 'A':

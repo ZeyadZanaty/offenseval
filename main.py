@@ -5,22 +5,30 @@ from Classifier import Classifier
 from DeepLearning import DeepLearner
 from sklearn.model_selection import train_test_split as split
 import numpy as np
+lbls=['NOT','OFF']
 
-dr = DataReader('./datasets/training-v1/offenseval-training-v1.tsv','A')
-data,labels = dr.get_labelled_data()
-data,labels = dr.shuffle(data,labels,'random')
+dr_tr = DataReader('./datasets/training-v1/offenseval-training-v1.tsv','A')
+tr_data,tr_labels = dr_tr.get_labelled_data()
+tr_data,tr_labels = dr_tr.shuffle(tr_data,tr_labels,'random')
 
-data = data[:]
-labels = labels[:]
+dr_tst = DataReader('./datasets/test-A/testset-taska.tsv')
+tst_data,tst_ids = dr_tst.get_test_data()
+
+tr_data = tr_data[:]
+tr_labels = tr_labels[:]
 
 prp = Preprocessor('remove_stopwords','stem')
-data = prp.clean(data)
+tr_data = prp.clean(tr_data)
+tst_data = prp.clean(tst_data)
 
 vct = Vectorizer('tfidf')
-vectors = vct.vectorize(data)
-tr_vectors,tst_vectors,tr_labels,tst_labels = split(vectors,labels,test_size=0.2)
+tr_vectors = vct.vectorize(tr_data)
+tst_vectors = vct.vectorize(tst_data)
 
-clf = Classifier('RandomForest',{'n_estimators':60})
-tuned_clf = clf.tune(tr_vectors,tr_labels,{'n_estimators': [n for n in range(10,100,10)]},best_only=False)
+clfs = Classifier('M-NaiveBayes')
+tuned_clf = clf.tune(tr_vectors,tr_labels,{'alpha':[0,1,5,10],'fit_prior':[True,False]},best_only=False)
 print(tuned_clf)
-print(clf.test_and_plot(tst_vectors,tst_labels,3))
+
+predictions = clf.predict(tst_vectors)
+for i,id in enumerate(tst_ids):
+    print(id,lbls[predictions[i]])

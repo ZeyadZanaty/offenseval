@@ -22,5 +22,8 @@ vct.vectorize(data)
 tr_data,tst_data,tr_labels,tst_labels = split(np.array(data),labels,test_size=0.2)
 
 model=DeepLearner(tr_data,tr_labels,vocab_length=vct.vocab_length,model_type='LSTM')
-model.train()
-print(model.test(tst_data,tst_labels))
+model.train(epochs=60)
+
+acc = model.test_and_plot(tst_data,tst_labels)
+
+print('Accurac:',acc)

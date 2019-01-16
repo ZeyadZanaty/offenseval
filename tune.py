@@ -73,7 +73,7 @@ prp_list = [
     i for j in range(len(cleaning_operations)) for i in itertools.combinations(cleaning_operations,j+1)
     ]
 
-vec_list = [['fasttext',{}],['tfidf',{}],['word2vec',{}],['glove',{}],['BoW',{}]]
+vec_list = [['fasttext',{}],['tfidf',{}],['word2vec',{}],['glove',{}],['count',{}]]
 
 clf_list = [['RandomForest',{'n_estimators': [n for n in range(10,200,10)]}],
             ['KNN',{'n_neighbors':[n for n in range(1,8,2)]}],
