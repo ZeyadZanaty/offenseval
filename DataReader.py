@@ -59,6 +59,19 @@ class DataReader:
             return shuffled_data,shuffled_labels
         else:
             return data,labels
+        
+    def upsample(self,data,labels):
+        new_data = []
+        new_labels = []
+        count = 0 
+        for i,tweet in enumerate(data):
+            new_labels.append(labels[i])
+            new_data.append(data[i])
+            if labels[i] > 0:
+                new_labels.append(labels[i])
+                new_data.append(data[i])
+                count+=1
+        return new_data,new_labels
     
     def str_to_label(self,all_labels):
         label = 0
