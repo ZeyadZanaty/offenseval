@@ -87,7 +87,7 @@ clf_list = [['RandomForest',{'n_estimators': [n for n in range(10,200,10)]}],
 dr = DataReader('./datasets/training-v1/offenseval-training-v1.tsv','A')
 data, labels = dr.get_labelled_data()
 data, labels = dr.shuffle(data,labels,'random')
-data,_,labels,_ = split(np.array(data),labels,test_size=0.3,stratify=labels)
+data,_,labels,_ = split(data,labels,test_size=0.3,stratify=labels)
 
 clf_dict = {clf[0]: {} for clf in clf_list}
 
