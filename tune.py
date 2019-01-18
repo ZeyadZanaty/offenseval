@@ -44,7 +44,7 @@ def plot_clfs(width=0.15,max_num=3,acc_sep=1.2,param_sep=2.8):
     param_sep += len(value)/10
     for k, v in value.items():
       plt.title(str(key))
-      plt_arr, plt_arr_ticks = get_plot_arrs(k,min(max_num,len(list(value.items()))), v)
+      plt_arr, plt_arr_ticks = get_plot_arrs(k, max_num, v)
       print(plt_arr, plt_arr_ticks)
       if not plt_acc:
         plt_acc = plt_arr
@@ -84,8 +84,9 @@ clf_list = [['RandomForest',{'n_estimators': [n for n in range(10,200,10)]}],
             ['DecisionTree',{'criterion':['gini','entropy']}],
             ['MLP',{'activation':['tanh', 'relu'],'solver':['sgd','adam','lbfgs']}]]
 
-dr = DataReader('./datasets/training-v1/offenseval-training-v1.tsv')
+dr = DataReader('./datasets/training-v1/offenseval-training-v1.tsv','A')
 data, labels = dr.get_labelled_data()
+data, labels = dr.shuffle(data,labels,'random')
 data = data[:]
 labels = labels[:]
 
@@ -121,3 +122,6 @@ for key,value in clf_dict.items():
 print(clf_dict)
 
 plot_clfs(width=0.15,max_num=3,acc_sep=1.2,param_sep=2.8)
+
+with open('tuning.txt','w') as f:
+  f.write('\n'+str(clf_dict)+'\n')
