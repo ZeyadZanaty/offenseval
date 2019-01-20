@@ -16,14 +16,16 @@ labels = labels[:]
 prp = Preprocessor('remove_stopwords','lemmatize')
 data = prp.clean(data)
 
+tr_data,tst_data,tr_labels,tst_labels = split(np.array(data),labels,test_size=0.2,stratify=labels)
+tr_data,tr_labels = dr.upsample(tr_data,tr_labels)
+tr_data,tr_labels = dr.shuffle(tr_data,tr_labels,'random')
+
 vct = Vectorizer('count')
-vct.vectorize(data)
+vct.vectorize(tr_data)
 
-tr_data,tst_data,tr_labels,tst_labels = split(np.array(data),labels,test_size=0.2)
-
-model=DeepLearner(tr_data,tr_labels,vocab_length=vct.vocab_length,model_type='LSTM')
-model.train(epochs=60)
+model=DeepLearner(tr_data,tr_labels,vocab_length=vct.vocab_length,model_type='CNN')
+model.train(epochs=20)
 
 acc = model.test_and_plot(tst_data,tst_labels)
 
-print('Accurac:',acc)
+print('Accuracy:',acc)

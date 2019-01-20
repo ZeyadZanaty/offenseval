@@ -1,6 +1,6 @@
 import warnings
 warnings.filterwarnings('ignore',category=FutureWarning)
-from keras.layers import Input, Dense, Embedding, Conv1D, MaxPooling1D, Convolution1D, LSTM
+from keras.layers import Input, Dense, Embedding, Convolution1D, MaxPooling1D, MaxPooling2D, Convolution2D, LSTM
 from keras.layers import Reshape, Flatten, Dropout, Concatenate
 from keras.regularizers import l2, l1
 from keras import regularizers
@@ -16,7 +16,7 @@ from keras.preprocessing.sequence import pad_sequences
 class DeepLearner:
 
     def __init__(self,data,labels,vocab_length=0,model_type='LSTM'):
-        self.tr_data, self.val_data, tr_labels, val_labels = train_test_split(np.array(data),labels, test_size=0.2, random_state=52)
+        self.tr_data, self.val_data, tr_labels, val_labels = train_test_split(np.array(data),labels, test_size=0.35,stratify=labels)
         self.tr_labels = self.one_hot(tr_labels)
         self.val_labels = self.one_hot(val_labels)
         self.vocab_length = vocab_length
@@ -44,6 +44,22 @@ class DeepLearner:
         model.add(Dropout(0.5))
         model.add(Convolution1D(16,3,activation="sigmoid"))
         model.add(MaxPooling1D(5))
+        model.add(Flatten())
+        model.add(Dense(self.tr_labels.shape[1],activation='softmax'))
+        model.compile(loss='categorical_crossentropy', optimizer='adam',metrics=['accuracy'])
+        model.summary()
+        self.model = model
+    
+    def CNN_2D(self):
+        model = Sequential()
+        model.add(Embedding(self.vocab_length, 30, input_length=self.max_len))
+        model.add(Reshape((30,self.max_len,1)))
+        model.add(Convolution2D(32,(1,5),activation="relu"))
+        model.add(Dropout(0.9))
+        model.add(Convolution2D(16,(2,3),activation="relu"))
+        model.add(Dropout(0.8))
+        model.add(Convolution2D(16,(2,2),activation="relu"))
+        model.add(Dropout(0.7))
         model.add(Flatten())
         model.add(Dense(self.tr_labels.shape[1],activation='softmax'))
         model.compile(loss='categorical_crossentropy', optimizer='adam',metrics=['accuracy'])
