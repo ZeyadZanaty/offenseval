@@ -30,7 +30,8 @@ LSTM, 1-D CNN
 - `python3 train.py` to train one of the deeplearning models.
 
 ## Sample tuning.py output
-
-![alt text](https://github.com/ZeyadZanaty/offenseval/blob/master/docs/tuning-reults/MLP-New.png?raw=true "MLP")
 ![alt text](https://github.com/ZeyadZanaty/offenseval/blob/master/docs/tuning-reults/LogisticRegression.png?raw=true "Logistic Regression")
 ![alt text](https://github.com/ZeyadZanaty/offenseval/blob/master/docs/tuning-reults/SVC.png?raw=true "SVC")
+![alt text](https://github.com/ZeyadZanaty/offenseval/blob/master/docs/tuning-reults/KNN.png?raw=true "KNN")
+
+
