@@ -106,4 +106,4 @@ venv.bak/
 
 embeddings/
 embeddings/word2vec.model
-docs/sub-a-results
+docs/sub-*
