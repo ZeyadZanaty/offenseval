@@ -108,6 +108,8 @@ class Vectorizer:
         self.vectors = [
             np.array(vector.tolist()+[0 for _ in range(self.max_len-len(vector))]) for vector in tqdm(vectors,'Finalizing')
             ]
+        for i,vec in enumerate(self.vectors):
+            self.vectors[i] = vec[:self.max_len]
         return self.vectors
 
     def fasttext(self):

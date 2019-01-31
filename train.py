@@ -17,7 +17,7 @@ prp = Preprocessor('remove_stopwords','lemmatize')
 data = prp.clean(data)
 
 tr_data,tst_data,tr_labels,tst_labels = split(np.array(data),labels,test_size=0.2,stratify=labels)
-tr_data,tr_labels = dr.upsample(tr_data,tr_labels)
+tr_data,tr_labels = dr.upsample(tr_data,tr_labels,label=1)
 tr_data,tr_labels = dr.shuffle(tr_data,tr_labels,'random')
 
 vct = Vectorizer('count')

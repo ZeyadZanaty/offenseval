@@ -60,14 +60,14 @@ class DataReader:
         else:
             return data,labels
         
-    def upsample(self,data,labels):
+    def upsample(self,data,labels,label=0):
         new_data = []
         new_labels = []
         count = 0 
         for i,tweet in enumerate(data):
             new_labels.append(labels[i])
             new_data.append(data[i])
-            if labels[i] > 0:
+            if labels[i] == label:
                 new_labels.append(labels[i])
                 new_data.append(data[i])
                 count+=1

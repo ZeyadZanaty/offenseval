@@ -44,10 +44,10 @@ class Classifier:
     def score(self,tst_data,tst_labels):
         return self.model.score(tst_data,tst_labels)
 
-    def tune(self,tr_data,tr_labels,tune_params=None,best_only=False):
+    def tune(self,tr_data,tr_labels,tune_params=None,best_only=False,scoring='f1'):
         if not tune_params:
             tune_params = self.params
-        tuner = GridSearchCV(self.model,tune_params,n_jobs=4,verbose=1)
+        tuner = GridSearchCV(self.model,tune_params,n_jobs=4,verbose=1,scoring=scoring)
         tuner.fit(tr_data,tr_labels)
         self.model = tuner.best_estimator_
         if best_only:
