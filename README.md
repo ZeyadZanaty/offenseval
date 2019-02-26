@@ -32,4 +32,4 @@ LSTM, 1-D CNN
 ## Sample tuning.py output
 ![alt text](https://github.com/ZeyadZanaty/offenseval/blob/master/docs/tuning-reults/tuning-b-f1/LogisticRegression.png?raw=true "Logistic Regression")
 ![alt text](https://github.com/ZeyadZanaty/offenseval/blob/master/docs/tuning-reults/tuning-b-f1/SVC.png?raw=true "SVC")
-![alt text](https://github.com/ZeyadZanaty/offenseval/blob/master/docs/tuning-reults/tuning-b-f1/RandomForest.png?raw=true "RF")
+![alt text](https://github.com/ZeyadZanaty/offenseval/blob/master/docs/tuning-reults/tuning-a/RandomForest.png?raw=true "RF")
